@@ -32,9 +32,8 @@
 </template>
 
 <script>
-    import {getArticle} from "@/api/article";
     import {follow, unFollow} from "@/api/user";
-    import {addFavorite, deleteFavorite} from "@/api/article";
+    import {getArticle, addFavorite, deleteFavorite} from "@/api/article";
     import MarkdownIt from "markdown-it";
     import ArticleMeta from "./components/article-meta";
     import ArticleComments from "./components/article-comments";
@@ -94,7 +93,7 @@
                     article.favoritesCount += 1;
                 }
                 article.favoriteDisabled = false;
-            },
+            }
         },
     };
 </script>

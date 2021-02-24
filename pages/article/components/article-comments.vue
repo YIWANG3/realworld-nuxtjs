@@ -1,8 +1,9 @@
 <template>
     <div>
-        <form class="card comment-form">
+        <form class="card comment-form" @submit.prevent="onAddComment">
             <div class="card-block">
               <textarea
+                      v-model="currentComment"
                       class="form-control"
                       placeholder="Write a comment..."
                       rows="3"
@@ -15,7 +16,6 @@
                 <button class="btn btn-sm btn-primary">Post Comment</button>
             </div>
         </form>
-
 
         <div class="card" v-for="comment in comments" :key="comment.id">
             <div class="card-block">
@@ -44,36 +44,16 @@
                 }" class="comment-author">{{comment.author.username}}
                 </nuxt-link>
                 <span class="date-posted">{{comment.createdAt | date('MMM DD, YYYY')}}</span>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-block">
-                <p class="card-text">
-                    With supporting text below as a natural lead-in to additional
-                    content.
-                </p>
-            </div>
-            <div class="card-footer">
-                <a href="" class="comment-author">
-                    <img
-                            src="http://i.imgur.com/Qr71crq.jpg"
-                            class="comment-author-img"
-                    />
-                </a>
-                &nbsp;
-                <a href="" class="comment-author">Jacob Schmidt</a>
-                <span class="date-posted">Dec 29th</span>
                 <span class="mod-options">
-                <i class="ion-edit"></i>
-                <i class="ion-trash-a"></i>
-              </span>
+                    <i class="ion-trash-a" @click="onDeleteComment(comment.id)"></i>
+                </span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {getComments} from "@/api/article";
+    import {getComments, addComment, deleteComment} from "@/api/article";
     import {mapState} from "vuex";
 
     export default {
@@ -86,7 +66,8 @@
         },
         data() {
             return {
-                comments: []
+                comments: [],
+                currentComment: ""
             }
         },
         computed: {
@@ -95,6 +76,29 @@
         async mounted() {
             const {data} = await getComments(this.article.slug);
             this.comments = data.comments;
+        },
+        methods: {
+            async onAddComment() {
+                try {
+                    const res = await addComment(this.article.slug, {comment: {body: this.currentComment}});
+                    const {comment} = res.data;
+                    this.comments.unshift(comment);
+                    this.currentComment = "";
+                } catch (e) {
+                    console.error("Failed to post comment");
+                }
+            },
+            async onDeleteComment(id) {
+                try {
+                    await deleteComment(this.article.slug, id);
+                    const deleteIndex = this.comments.findIndex(comment => comment.id === id);
+                    if (deleteIndex > -1) {
+                        this.comments.splice(deleteIndex, 1);
+                    }
+                } catch (e) {
+                    console.error("Failed to delete comment");
+                }
+            }
         }
     }
 </script>
