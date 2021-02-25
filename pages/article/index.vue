@@ -14,6 +14,12 @@
                 <div class="col-md-12" v-html="article.body"></div>
             </div>
 
+            <ul class="tag-list">
+                <li class="tag-default tag-pill tag-outline" v-for="tag in article.tagList">
+                    {{tag}}
+                </li>
+            </ul>
+
             <hr/>
 
             <div class="article-actions">
