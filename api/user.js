@@ -30,3 +30,10 @@ export const unFollow = (username) => {
         url: `/api/profiles/${username}/follow`
     })
 };
+
+export const getProfiles = (username) => {
+    return request({
+        method: 'GET',
+        url: `/api/profiles/${username}`
+    })
+};
