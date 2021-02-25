@@ -30,6 +30,29 @@ export const deleteFavorite = slug => {
     })
 };
 
+export const createArticle = data => {
+    return request({
+        method: 'POST',
+        url: `/api/articles`,
+        data
+    })
+};
+
+export const updateArticle = (data, slug) => {
+    return request({
+        method: 'PUT',
+        url: `/api/articles/${slug}`,
+        data
+    })
+};
+
+export const deleteArticle = slug => {
+    return request({
+        method: 'DELETE',
+        url: `/api/articles/${slug}`
+    })
+};
+
 export const getArticle = slug => {
     return request({
         method: 'GET',
